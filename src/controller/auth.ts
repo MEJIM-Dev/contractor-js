@@ -1,22 +1,27 @@
-import express, { Router, Request, Response} from 'express';
-import jwt from 'jsonwebtoken';
-
-const SECRET_KEY = 'your-secret-key';
+import { Router, Request, Response} from 'express';
+import { authenticateUser } from '../util/auth';
+import { ApiResponse, AuthRequest } from '../dto/types';
+import { generateToken } from '../middleware/auth';
 const router = Router();
 
-router.post('/login', async (req: Request, res:Response) => {
-    // const { username: string, password: string } = req.body;
+router.post('/login', async (req: Request, res: Response) => {
+    const body: AuthRequest = req.body;
+
+    try {
+        const user = await authenticateUser(body);
   
-    // Replace this with your actual user authentication logic.
-    // if (username === 'admin' && password === 'password') {
-    //   const user = { id: 1, username }; // Mock user data
-    //   const token = jwt.sign(user, SECRET_KEY, { expiresIn: '1h' });
-  
-    //   return res.json({ status: 'success', data: { token }, message: 'Login successful' });
-    // }
-  
-    // return res.status(401).json({ status: 'error', message: 'Invalid credentials' });
-    return res.send();
-  });
+        const token = generateToken(user);
+
+        res.json(
+            ApiResponse.success({token}, 'Login successful')
+        );
+    } catch(e) {
+        console.error(e)
+        res.status(401).json(
+            ApiResponse.error('Invalid credentials')
+        );
+    }
+});
+
   
   export default router;
