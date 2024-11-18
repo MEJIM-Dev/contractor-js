@@ -1,7 +1,6 @@
 import express, { Request, Response } from 'express';
 import { find, findAll, saveJob, } from '../service/job';
-import { ApiResponse } from '../dto/types';
-import { JobUpdates } from '../dto/types';
+import { ApiResponse, JobCreation } from '../dto/types';
 
 const router = express.Router();
 
@@ -21,11 +20,24 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 router.post('/', async (req: Request, res: Response) => {
-    const body: JobUpdates = req.body;
-    const job = saveJob(body);
-    res.status(201).json(
-        ApiResponse.success(job, 'Jobs Saved successfully.')
-    );
+    const body: JobCreation = req.body;
+    try {
+        const job = saveJob(body);
+        res.status(201).json(
+            ApiResponse.success(job, 'Jobs Saved successfully.')
+        );
+    } catch (e: unknown){
+        console.error(e)
+        if (e instanceof Error) {
+            res.status(400).json(
+              ApiResponse.error(e.message)
+            );
+          } else {
+            res.status(500).json(
+              ApiResponse.error('An unknown error occurred.')
+            );
+        }
+    }
 });
 
 export {router};

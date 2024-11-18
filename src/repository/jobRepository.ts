@@ -1,7 +1,8 @@
-import { JobUpdates, PagedResponse } from "../dto/types";
-import { Job } from "../model/model"
+import { JobUpdates } from "../dto/types";
+import { PagedResponse } from "../dto/types";
+import { Job, JobCreationAttributes } from "../model/model"
 
-export async function save (body: {}): Promise<Job|null> {
+export async function save (body: JobCreationAttributes): Promise<Job|null> {
     return await Job.create(body);
 }
 

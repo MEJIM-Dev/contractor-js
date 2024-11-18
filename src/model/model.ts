@@ -12,7 +12,7 @@ interface JobAttributes {
   clientId: number;
 }
 
-type JobCreationAttributes = Optional<JobAttributes, 'id' | 'paymentDate' | 'paid'>;
+export type JobCreationAttributes = Optional<JobAttributes, 'id' | 'paymentDate' | 'paid'>;
 
 class Job extends Model<JobAttributes, JobCreationAttributes> implements JobAttributes {
   public id!: number;
@@ -41,32 +41,76 @@ Job.init(
   { sequelize, modelName: 'Job' }
 );
 
+export enum ProfileType { 
+    CLIENT = 'client',
+    CONTRACTOR = 'contractor'
+}
+
 interface ProfileAttributes {
   id: number;
   balance: number;
+  firstName: string;
+  lastName: string;
+  profession: string;
+  type: ProfileType;
+  password: string;
+  email: string
 }
 
-type ProfileCreationAttributes = Optional<ProfileAttributes, 'id'>;
+export type ProfileCreationAttributes = Optional<ProfileAttributes, 'id' | "profession">;
 
 class Profile extends Model<ProfileAttributes, ProfileCreationAttributes> implements ProfileAttributes {
   public id!: number;
   public balance!: number;
+  public firstName!: string;
+  public lastName!: string;
+  public profession!: string;
+  public type!: ProfileType;
+  public password!: string;
+  public email!: string;
 }
 
 Profile.init(
   {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    balance: { type: DataTypes.FLOAT, allowNull: false, defaultValue: 0 },
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      balance: { 
+        type: DataTypes.FLOAT, 
+        allowNull: false, defaultValue: 0 
+      },
+      type: {
+        type: DataTypes.ENUM(...Object.values(ProfileType)),
+        allowNull: false,
+      },
+      firstName: { 
+        type: DataTypes.STRING, 
+        allowNull: false 
+      },
+      lastName: { 
+        type: DataTypes.STRING, 
+        allowNull: false 
+      },
+      profession: {
+        type: DataTypes.STRING, 
+        allowNull: true 
+      },
+      password: { 
+        type: DataTypes.STRING, 
+        allowNull: false 
+      }, 
+      email: { 
+        type: DataTypes.STRING, 
+        allowNull: false 
+      },
   },
   { sequelize, modelName: 'Profile' }
 );
 
 enum ContractStatus { 
-    new = 'new',
+    NEW = 'new',
     IN_PROGRESS = 'in_progress',
     TERMINATED = 'terminated'
 }
@@ -77,7 +121,7 @@ interface ContractAttributes {
     status: ContractStatus
 }
 
-type ContractCreationAttributes = Optional<ContractAttributes, 'id'>;
+export type ContractCreationAttributes = Optional<ContractAttributes, 'id'>;
 
 class Contract extends Model<ContractAttributes, ContractCreationAttributes> {
     public id!: number;
@@ -100,7 +144,7 @@ Contract.init(
     status:{
       type: DataTypes.ENUM(...Object.values(ContractStatus)),
       allowNull: false,
-      defaultValue: ContractStatus.new
+      defaultValue: ContractStatus.NEW
     }
   },
   {
