@@ -1,6 +1,20 @@
 import { Sequelize, DataTypes, Model, Optional } from 'sequelize';
+import dotenv from "dotenv";
+dotenv.config();
 
-const sequelize = new Sequelize('mysql://username:password@localhost:3306/your_database');
+const { DB_HOST, DB_USERNAME = "user", DB_PASSWORD, DB_LOGGING, DB_NAME="db" } = process.env;
+
+const sequelize = new Sequelize(DB_NAME, DB_USERNAME, DB_PASSWORD, {
+  host: DB_HOST, 
+  dialect: 'mysql',  
+  logging: DB_LOGGING==undefined ? false : DB_LOGGING=="true" ? true : false,    
+  pool: {
+      max: 5,        
+      min: 0,     
+      acquire: 30000,
+      idle: 10000  
+  }
+});
 
 interface JobAttributes {
   id: number;

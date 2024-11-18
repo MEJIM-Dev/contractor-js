@@ -108,3 +108,17 @@ export type AccessTokenDto = {
 }
 
 export type UserResponseDto = Omit<UserCreation, "password">
+
+export type RoutePermissions = {
+    url: string;
+    authenticationRequired: boolean;
+    method: ExtendedHttpReuestMethods;
+}
+
+export enum ExtendedHttpReuestMethods { 
+    GET = "GET", 
+    POST = "POST",
+    PATCH = "PATCH",
+    PUT = "PUT",
+    DELETE = "DELETE"
+}

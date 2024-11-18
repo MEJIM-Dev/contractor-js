@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import { sequelize } from './model/model';
 import {router as JobRouter} from "./controller/job"
 import {router as AuthRouter} from "./controller/auth"
+import {router as UserRouter} from "./controller/user"
 import { isAuthorized } from './service/auth';
 
 const app: Application = express();
@@ -16,7 +17,8 @@ sequelize.sync({ force: false })
 .catch((error: Error) => console.error('Database synchronization failed:', error));
 
 app.use("*", isAuthorized)
-app.use("/jobs", JobRouter);
-app.use("/auth", AuthRouter);
+app.use("/api/jobs", JobRouter);
+app.use("/api/auth", AuthRouter);
+app.use("/api/user", UserRouter);
 
 export default app;

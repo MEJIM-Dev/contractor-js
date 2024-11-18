@@ -61,7 +61,7 @@ router.get("/:id", async (req: Request, res: Response) => {
 });
 
 
-router.patch(":id", async (req: Request, res: Response) => {
+router.patch("/:id", async (req: Request, res: Response) => {
   try {
     const profileData = req.body;
     const updatedProfile: Profile = await updateUser(Number(req.params.id), profileData);
@@ -89,7 +89,7 @@ router.patch(":id", async (req: Request, res: Response) => {
   }
 });
   
-router.delete("/", async (req: Request, res: Response) => {
+router.delete("/:id", async (req: Request, res: Response) => {
     try {
       const deletedCount = await deleteUser(Number(req.params.id));
       
