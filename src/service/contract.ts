@@ -1,7 +1,7 @@
 // services/contractService.ts
 import { findById, findAll, createContract, updateContract, deleteContract } from "../db/contract";
 import { findById as findUserById } from "../db/user";
-import { Contract, ContractCreationAttributes } from "../model/model";
+import { Contract, ContractCreationAttributes, ProfileType } from "../model/model";
 import { ContractCreation, PagedResponse, UpdateContractResult } from "../dto/types";
 
 export async function getContractById(id: number): Promise<Contract | null> {
@@ -18,15 +18,23 @@ export async function getAllContracts(offset: number, limit: number, filters: an
 }
 
 export async function createNewContract(data: ContractCreation): Promise<Contract> {
+  if(data.clientId == data.contractorId){
+    throw new Error("Invalid Action")
+  }
+
   //Find users
   const contractor = await findUserById(data.contractorId);
   if(contractor==null){
-      throw new Error("Invalid Contractor")
+    throw new Error("Invalid Contractor")
+  } else if(contractor.type as ProfileType != ProfileType.CONTRACTOR){
+    throw new Error("Invalid Contractor")
   }
 
   const client = await findUserById(data.clientId);
-  if(client==null){
-      throw new Error("Invalid Client")
+  if(client==null || contractor.type== ProfileType.CLIENT){
+    throw new Error("Invalid Client")
+  } else if(client.type as ProfileType != ProfileType.CLIENT){
+    throw new Error("Invalid Client")
   }
 
   const createContractData: ContractCreationAttributes = {terms: data.terms, status: data.status, ContractorId: data.contractorId, ClientId: data.clientId};

@@ -57,7 +57,7 @@ Profile.init(
       allowNull: false,
     },
     password: { type: DataTypes.STRING, allowNull: false },
-    email: { type: DataTypes.STRING, allowNull: false },
+    email: { type: DataTypes.STRING, allowNull: false, unique: true },
   },
   { sequelize, modelName: 'Profile' }
 );
@@ -134,7 +134,7 @@ Job.init(
     description: { type: DataTypes.STRING, allowNull: false },
     paid: { type: DataTypes.BOOLEAN, defaultValue: false },
     price: { type: DataTypes.FLOAT, allowNull: false },
-    paymentDate: { type: DataTypes.DATE, allowNull: true },
+    paymentDate: { type: DataTypes.DATE, allowNull: false},
     contractorId: { type: DataTypes.INTEGER, allowNull: false },
     clientId: { type: DataTypes.INTEGER, allowNull: false },
     ContractId: { type: DataTypes.INTEGER, allowNull: false },

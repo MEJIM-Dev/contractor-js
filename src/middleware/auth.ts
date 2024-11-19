@@ -11,6 +11,7 @@ const REFRESH_TOKEN_SECRET = process.env.SECRET_KEY || 'secret';
 export async function authenticateToken(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
+  console.debug(token)
 
   if (!token) {
     return res.status(401).json(
@@ -34,6 +35,7 @@ export async function authenticateToken(req: Request, res: Response, next: NextF
 
     next();
   } catch (error) {
+    console.error(error)
     return res.status(403).json(
         ApiResponse.error("Invalid or expired token")
     );
@@ -46,18 +48,26 @@ export function verifyAccessToken(token: string){
 }
 
 export function generateToken (user: AuthObject): AccessTokenDto{
-    const accessToken = generateAccessToken(user);
-    const refreshToken = generateRefreshToken(user);
-    const res: AccessTokenDto = {"access-token": accessToken, "refresh-token": refreshToken};
+    const plainObject: {} = {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.type
+    };
+    console.log(plainObject)
+    const accessToken = generateAccessToken(plainObject);
+    const refreshToken = generateRefreshToken(plainObject);
+    const res: AccessTokenDto = {"accessToken": accessToken, "refreshToken": refreshToken};
     return res;
 }
 
-export function generateAccessToken (user: AuthObject): string{
-    const token = jwt.sign(user, ACCESS_TOKEN_SECRET, { expiresIn: '15' });
+export function generateAccessToken (user: {}): string{
+    const token = jwt.sign(user, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
     return token;
 }
 
-export function generateRefreshToken (user: AuthObject): string{
+export function generateRefreshToken (user: {}): string{
     const token = jwt.sign(user, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
     return token;
 }

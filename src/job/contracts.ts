@@ -55,6 +55,7 @@ async function fulfillContracts() {
         }
 
         // Check if the client has sufficient balance to pay
+        console.log(client.balance, job.price, client.balance< job.price)
         if (client.balance < job.price) {
           console.error(`Insufficient balance for Client ID: ${client.id} for Job ID: ${job.id}`);
           continue;

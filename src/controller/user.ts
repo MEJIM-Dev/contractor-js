@@ -1,6 +1,6 @@
-import { Request, Response, Router } from 'express';
+import e, { Request, Response, Router } from 'express';
 import { createUser, deleteUser, find, findAll, updateUser } from '../service/user';
-import { ApiResponse, AuthObject, AuthRequest, UserResponseDto } from '../dto/types';
+import { ApiResponse, AuthObject, AuthRequest, UserCreation, UserResponseDto } from '../dto/types';
 import { Profile } from '../model/model';
 import { generateToken } from '../middleware/auth';
 
@@ -8,7 +8,8 @@ const router = Router();
 
 router.post("/", async (req: Request, res: Response) => {
   try {
-    const profileData = req.body;
+    const profileData: UserCreation = req.body;
+    console.log("body: ", profileData)
     const profile: Profile = await createUser(profileData);
 
     const body: AuthObject = profile;
@@ -16,11 +17,12 @@ router.post("/", async (req: Request, res: Response) => {
 
     res.status(201).json(
         ApiResponse.success(
-            JSON.stringify(token), 
+            token, 
             'Jobs Saved successfully.'
         )
     );
   } catch (error: unknown) {
+    console.error(error)
     if (error instanceof Error) {
         res.status(400).json(
           ApiResponse.error(error.message)
@@ -77,6 +79,7 @@ router.patch("/:id", async (req: Request, res: Response) => {
         ApiResponse.success(responseData, "success")
     );
   } catch (error: unknown) {
+    console.error(error)
     if (error instanceof Error) {
         res.status(400).json(
           ApiResponse.error(error.message)
@@ -95,13 +98,14 @@ router.delete("/:id", async (req: Request, res: Response) => {
       
       res.status(200).json(ApiResponse.success(null, "Profile deleted successfully"));
     } catch (error) {
+      console.error(error)
       if (error instanceof Error) {
           res.status(400).json(
             ApiResponse.error(error.message)
           );
         } else {
           res.status(500).json(
-            ApiResponse.error('An unknown error occurred.')
+            ApiResponse.error('An zunknown error occurred.')
           );
       }
     }

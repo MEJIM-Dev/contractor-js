@@ -8,12 +8,12 @@ const configuredRoutes: Array<RoutePermissions> = [
     },
     {
         url: "/api/users",
-        authenticationRequired: true,
+        authenticationRequired: false,
         method: ExtendedHttpReuestMethods.POST
     },
     {
         url: "/api/users/:id",
-        authenticationRequired: false,
+        authenticationRequired: true,
         method: ExtendedHttpReuestMethods.GET
     },
     {
@@ -60,7 +60,12 @@ const configuredRoutes: Array<RoutePermissions> = [
         url: "/api/contracts/:id",
         authenticationRequired: true,
         method: ExtendedHttpReuestMethods.DELETE
-    }
+    },
+    {
+        url: "/api/transactions/transfer",
+        authenticationRequired: true,
+        method: ExtendedHttpReuestMethods.POST
+    },
 ]
 
 export function getAppRoutes (): Array<RoutePermissions>{

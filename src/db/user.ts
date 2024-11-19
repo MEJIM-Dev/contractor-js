@@ -1,5 +1,7 @@
+import e from "express";
 import { PagedResponse } from "../dto/types";
 import { Profile, ProfileCreationAttributes } from "../model/model";
+import { Transaction, ValidationError } from "sequelize";
 
 export async function findById(id: number): Promise<Profile | null> {
     return await Profile.findByPk(id);
@@ -26,24 +28,38 @@ export async function findAllPaged(page: number, pageSize: number, filters: {}):
     return response;
 }
 
-export async function update(id: number, dto: Partial<ProfileCreationAttributes>): Promise<Profile | null> {
+export async function update(id: number, dto: Partial<ProfileCreationAttributes>, transaction? : Transaction): Promise<Profile | null> {
     const user = await Profile.findByPk(id);
     if (!user) return null;
 
-    return await user.update(dto);
+    return await user.update(dto, {transaction});
 }
 
-export async function remove(id: number): Promise<boolean> {
+export async function remove(id: number, transaction? : Transaction): Promise<boolean> {
     const profile = await Profile.findByPk(id);
     if (!profile) return false;
 
-    await profile.destroy();
+    await profile.destroy({transaction});
     return true;
 }
 
-export async function save(data: ProfileCreationAttributes): Promise<Profile> {
-    return await Profile.create(data);
+export async function save(data: ProfileCreationAttributes, transaction? : Transaction): Promise<Profile| null> {
+    try {
+        const user = await Profile.create(data, { transaction });
+        console.log(`User saved succesfully`)
+        return user; 
+    } catch (error) {
 
+        if (error instanceof ValidationError) {
+            const errorMessages = error.errors.map((err) => err.message).join(', ');
+
+            // Return a custom error message or send it in the response
+            throw new Error(`Validation failed: ${errorMessages}`);
+        }
+        
+        console.error(error)
+        return null;
+    }
 }
 
 export async function findByUsername (email: string): Promise<Profile|null> {
