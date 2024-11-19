@@ -36,6 +36,31 @@ const configuredRoutes: Array<RoutePermissions> = [
         authenticationRequired: true,
         method: ExtendedHttpReuestMethods.GET
     },
+    {
+        url: "/api/contracts",
+        authenticationRequired: true,
+        method: ExtendedHttpReuestMethods.POST
+    },
+    {
+        url: "/api/contracts/:id",
+        authenticationRequired: true,
+        method: ExtendedHttpReuestMethods.GET
+    },
+    {
+        url: "/api/contracts",
+        authenticationRequired: true,
+        method: ExtendedHttpReuestMethods.GET
+    },
+    {
+        url: "/api/contracts/:id",
+        authenticationRequired: true,
+        method: ExtendedHttpReuestMethods.PATCH
+    },
+    {
+        url: "/api/contracts/:id",
+        authenticationRequired: true,
+        method: ExtendedHttpReuestMethods.DELETE
+    }
 ]
 
 export function getAppRoutes (): Array<RoutePermissions>{

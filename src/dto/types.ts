@@ -1,5 +1,5 @@
 import { callbackify } from "util";
-import { ProfileType } from "../model/model";
+import { Contract, ContractStatus, ProfileType } from "../model/model";
 
 export class AuthRequest {
     username!: string;
@@ -79,6 +79,7 @@ export class JobCreation {
     paid!: false;
     contractorId!: number;
     clientId!: number;
+    contractId!: number
 }
 
 export interface UserCreation {
@@ -122,3 +123,21 @@ export enum ExtendedHttpReuestMethods {
     PUT = "PUT",
     DELETE = "DELETE"
 }
+
+export interface UpdateContractResult {
+    affectedCount: number;
+    updatedContract: Contract | null;
+  }
+
+export class ContractUpdates {
+    terms: string = "";
+    status: ContractStatus = ContractStatus.NEW;
+}
+  
+export class ContractCreation {
+  terms!: string;
+  status: ContractStatus = ContractStatus.NEW;
+  clientId!: number;
+  contractorId!: number;
+}
+  
