@@ -5,6 +5,7 @@ import {router as JobRouter} from "./controller/job"
 import {router as AuthRouter} from "./controller/auth"
 import {router as UserRouter} from "./controller/user"
 import {router as ContractRouter} from "./controller/contract"
+import {router as TransactionRouter} from "./controller/transction"
 import { isAuthorized } from './service/auth';
 import "./job/contracts"
 
@@ -23,5 +24,6 @@ app.use("/api/jobs", JobRouter);
 app.use("/api/auth", AuthRouter);
 app.use("/api/users", UserRouter);
 app.use("/api/contracts", ContractRouter);
+app.use("/api/transctions", TransactionRouter);
 
 export default app;

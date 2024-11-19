@@ -13,15 +13,14 @@ router.post('/login', async (req: Request, res: Response) => {
         const token = generateToken(user);
 
         res.json(
-            ApiResponse.success({token}, 'Login successful')
+            ApiResponse.success(token, 'Login successful')
         );
-    } catch(e) {
+    } catch(e: unknown) {
         console.error(e)
         res.status(401).json(
             ApiResponse.error('Invalid credentials')
         );
     }
 });
-
   
-  export {router};
+export {router};

@@ -18,11 +18,11 @@ export class ApiResponse <T> {
     }
 
     static success<T>(data: T, message: string): ApiResponse<T> {
-        return new ApiResponse(data, "00" , "success");
+        return new ApiResponse(data, "00" , message);
     }
 
     static error<T>(message: string, data?: T): ApiResponse<T> {
-        return new ApiResponse(data, "99" , "error");
+        return new ApiResponse(data, "99" , message);
     }
 }
 
@@ -79,7 +79,8 @@ export class JobCreation {
     paid!: false;
     contractorId!: number;
     clientId!: number;
-    contractId!: number
+    contractId!: number;
+    paymentDate!: string;
 }
 
 export interface UserCreation {
@@ -104,8 +105,8 @@ export interface UserUpdates {
 export type AuthObject = Omit<UserCreation, "password"> & {id: number}
 
 export type AccessTokenDto = {
-    "access-token": string,
-    "refresh-token": string | null
+    "accessToken": string,
+    "refreshToken": string | null
 }
 
 export type UserResponseDto = Omit<UserCreation, "password">

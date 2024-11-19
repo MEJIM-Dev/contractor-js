@@ -7,22 +7,35 @@ const router = express.Router();
 router.get('/', async (req: Request, res: Response) => {
     const queryParams = req.query;
 
-    const page = queryParams.page as string;
-    const pageSize = queryParams.pageSize as string;
+    try {
+        const page = queryParams.page as string;
+        const pageSize = queryParams.pageSize as string;
 
-    const pageNumber = parseInt(page, 10) || 1;
-    const pageSizeNumber = parseInt(pageSize, 10) || 10;
+        const pageNumber = parseInt(page, 10) || 1;
+        const pageSizeNumber = parseInt(pageSize, 10) || 10;
 
-    const jobs = await findAll(pageNumber, pageSizeNumber, queryParams);
-    res.status(200).json(
-        ApiResponse.success(jobs, 'Jobs fetched successfully.')
-    );
+        const jobs = await findAll(pageNumber, pageSizeNumber, queryParams);
+        res.status(200).json(
+            ApiResponse.success(jobs, 'Jobs fetched successfully.')
+        );
+    } catch (e) {
+        console.error(e)
+        if (e instanceof Error) {
+            res.status(400).json(
+              ApiResponse.error(e.message)
+            );
+          } else {
+            res.status(500).json(
+              ApiResponse.error('An unknown error occurred.')
+            );
+        }
+    }
 });
 
 router.post('/', async (req: Request, res: Response) => {
     const body: JobCreation = req.body;
     try {
-        const job = saveJob(body);
+        const job = await saveJob(body);
         res.status(201).json(
             ApiResponse.success(job, 'Jobs Saved successfully.')
         );
